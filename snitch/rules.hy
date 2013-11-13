@@ -19,6 +19,6 @@
                      "info" (.items results)})
 
       (.update db.results
-               {"_id": ~set-id}
+               {"_id" ~set-id}
                results
                true))))
