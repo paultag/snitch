@@ -1,4 +1,6 @@
+
 (require snitch.rules)
+(import [snitch.informants [pingable httpable has-in-title]])
 
 
 (rule-set "google"
