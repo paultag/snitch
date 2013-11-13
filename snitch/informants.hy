@@ -1,4 +1,4 @@
-(import [sh [ping ErrorReturnCode-1]]
+(import [sh [ping ErrorReturnCode]]
         [requests.exceptions [ConnectionError]]
         lxml.html
         requests
@@ -31,5 +31,5 @@
   (try
     (do (ping host "-c" 1) null)
 ;       (, true (+ host " responded to ping")))
-  (catch [e ErrorReturnCode-1]
+  (catch [e ErrorReturnCode]
     (+ host " appears unpingable"))))

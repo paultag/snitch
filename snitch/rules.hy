@@ -1,3 +1,9 @@
+(import [pymongo [Connection]])
+
+(setv db (getattr (Connection "localhost" 27017) "snitch"))
+; mutable as fuck
+
+
 (defmacro rule [host &rest conds]
   `(fn [] (setv ret null)
       ; (print ~host)
