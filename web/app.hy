@@ -1,10 +1,15 @@
 (import [snitch.models [Deposition]]
         [pymongo [Connection]]
-        [flask [Flask render-template]])
+        [flask [Flask render-template]]
+        datetime humanize)
 
 
 (setv app (Flask "__main__"))
 (setv db (getattr (Connection "localhost" 27017) "snitch"))
+
+
+(with-decorator (.template-filter app "time")
+  (fn [dt] (.naturaltime humanize (- (.utcnow datetime.datetime) dt))))
 
 
 (with-decorator (.route app "/")

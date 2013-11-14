@@ -5,16 +5,24 @@
 {% block body %}
     <h1>Currently viewing the {{set}} sites.</h1>
 
+    <p>This was last checked {{deposition.updated_at|time}}</p>
+
 
     {% if deposition.is_down() %}
         <div id="header" class="down" >
+            It's totally down.
         </div>
     {% elif deposition.has_outage() %}
         <div id="header" class="out" >
-            asf
+            Outage. Currently:
+            {% for site in deposition.down_sites() %}
+                {{site.name}}
+            {% endfor %}
+            are down.
         </div>
     {% else %}
         <div id="header" class="up" >
+            It's up!
         </div>
     {% endif %}
 

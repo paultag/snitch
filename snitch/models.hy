@@ -29,6 +29,10 @@
                 (assoc self k v))
              (.set-sites* self))]
 
+  [down-sites (fn [self] (filter (lambda [x] (.down x))
+                                 (get self "sites")))]
+
+
   [has-outage (fn [self] (any (list-comp (.down x) [x (get self "sites")])))]
   [is-down (fn [self] (all (list-comp (.down x) [x (get self "sites")])))]
   ;; xxx: precomp this, this sucks to hit twice.
