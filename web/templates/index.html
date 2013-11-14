@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block subject %}Snitch.{% endblock %}
+
+{% block body %}
+<h1>What is this</h1>
+<p>
+Snitch is a <a href="http://en.wikipedia.org/wiki/Free_software">Free Software</a>
+server monitor. It doesn't have anything fancy, just the baiscs, but it does
+it's job, and it does it well. It's configured using a
+<a href="http://hylang.org/">Hy</a> DSL, which is extremely declarative, and
+extensible in the right places.
+</p>
+
+<h1>What it's not</h1>
+<p>
+This isn't a replacement for big and professional stuff like monit or nagios.
+This is for people who just want basic information about running services
+on remote boxen.
+</p>
+
+<h1>Current Status Views</h1>
+
+{% for set in sets %}
+<ul>
+    <li><a href="{{ url_for('set_view', setid=set._id) }}" >{{set._id}}</a></li>
+</ul>
+{% endfor %}
+
+{% endblock %}

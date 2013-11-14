@@ -1,4 +1,3 @@
-
 (defmacro rule [host &rest conds]
   `(fn [] (setv ret null)
       (print ~host)
@@ -8,17 +7,11 @@
         (.append (get results ~host) (x ~host)))))
 
 
-(defmacro rule-set [set-id &rest rules]
+(defmacro rules [set-id &rest my-rules]
   `((fn []
-      (import [pymongo [Connection]])
-      (setv db (getattr (Connection "localhost" 27017) "snitch"))
+      (import [snitch.models [Deposition]])
+
       (setv results {})  ; capture each result in the closure
-      (for [rue [~@rules]] (rue))
+      (for [rue [~@my-rules]] (rue))
 
-      (setv results {"_id" ~set-id
-                     "info" (.items results)})
-
-      (.update db.results
-               {"_id" ~set-id}
-               results
-               true))))
+      (.update (Deposition ~set-id) results))))

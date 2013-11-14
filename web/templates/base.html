@@ -1,0 +1,22 @@
+<!--
+    Copyright (c) Paul R. Tagliamonte, 2013 under the terms and conditions
+    of the MIT/Expat license.
+ -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block subject %}Snitch{% endblock %}</title>
+        <meta name="description" content="">
+        <link href="{{ url_for('static', filename='snitch.css') }}" rel="stylesheet">
+    </head>
+    <body>
+        <div id="main" class="container" >
+            <div class="content" >
+            <img src="{{ url_for('static', filename='images/snitch.png') }}" alt="Snitch Status" />
+{% block body %}
+{% endblock %}
+            </div>
+        </div>
+    </body>
+</html>
