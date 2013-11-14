@@ -4,4 +4,22 @@
 
 {% block body %}
     <h1>Currently viewing the {{set}} sites.</h1>
+
+
+    {% if deposition.is_down() %}
+        <div id="header" class="down" >
+        </div>
+    {% elif deposition.has_outage() %}
+        <div id="header" class="out" >
+            asf
+        </div>
+    {% else %}
+        <div id="header" class="up" >
+        </div>
+    {% endif %}
+
+    {% for site in deposition.sites %}
+    {{site.name}} {{site.down()}}
+    {% endfor %}
+
 {% endblock %}

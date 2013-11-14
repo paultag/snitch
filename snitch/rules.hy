@@ -14,4 +14,4 @@
       (setv results {})  ; capture each result in the closure
       (for [rue [~@my-rules]] (rue))
 
-      (.update (Deposition ~set-id) results))))
+      (.create Deposition ~set-id results))))
