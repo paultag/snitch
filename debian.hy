@@ -3,10 +3,16 @@
 
 
 (rules "debian"
-  (rule "git.debian.org" pingable httpable (has-open-port 22))
+
+  (rule "git.debian.org"
+        pingable
+        httpable
+        (has-open-port 22)  ; ssh
+        (has-open-port 9418))  ; git
+
   (rule "ftp-master.debian.org" pingable httpable)
-  (rule "ftp.upload.debian.org" pingable (has-open-port 21))
-  (rule "ssh.upload.debian.org" pingable (has-open-port 22))
+  (rule "ftp.upload.debian.org" pingable (has-open-port 21))  ; ftp
+  (rule "ssh.upload.debian.org" pingable (has-open-port 22))  ; ssh
   (rule "release.debian.org" pingable httpable)
   (rule "snapshot.debian.org" pingable httpable)
   (rule "wiki.debian.org" pingable httpable)
