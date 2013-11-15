@@ -1,1 +1,1 @@
-(def *snitch-landing-sites* {"localhost" "debian"})
+(def *snitch-landing-sites* {"fraked.debian.net" "debian"})
