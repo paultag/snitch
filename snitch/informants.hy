@@ -14,12 +14,13 @@
 
 (defn has-open-port [port]
   (fn [host]
-    (if (= 0 (.connect-ex
-               (.socket socket socket.AF_INET socket.SOCK_STREAM)
-               (, host port)))
 
-      (, true (+ host " has an open port at port " (str port)))
-      (, false (+ host " has a closed port at port " (str port))))))
+    (try
+      (do
+        (.connect (.socket socket) (, host port))
+        (, true (+ host " has an open port at port " (str port))))
+    (catch [e socket.error]
+      (, false (+ host " has a closed port at port " (str port)))))))
 
 (defn has-in-title [url what]
   (fn [host]
