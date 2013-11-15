@@ -14,7 +14,6 @@
 
 (defn has-open-port [port]
   (fn [host]
-
     (try
       (do
         (.connect (.socket socket) (, host port))
