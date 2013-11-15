@@ -8,11 +8,11 @@
     <p>This was last checked {{deposition.updated_at|time}}</p>
 
 
-    {% if deposition.is_down() %}
+    {% if deposition.is_offline() %}
         <div id="header" class="down" >
             It's totally down.
         </div>
-    {% elif deposition.has_outage() %}
+    {% elif deposition.is_mixed() %}
         <div id="header" class="out" >
             Currently we have a partial outage.
         </div>
@@ -24,21 +24,22 @@
 
     <div id='sites'>
         {% for site in deposition.sites %}
-        <div class='site {% if site.down() %}down{% else %}up{% endif %}'>
-            {% if site.down() %}
+        <div class='site {% if site.is_offline() or site.is_mixed() %}down{% else %}up{% endif %}'>
+            {% if site.is_offline() %}
                 <span class='status' >↓</span>
             {% else %}
                 <span class='status' >✓</span>
             {% endif %}
-            <h2>{{site.name}}</h2>
+            <h2>{{site.site}}</h2>
 
-            {% if site.down() %}
-                <ul>
-                {% for datum in site.info %}
-                    <li>{{datum}}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
+            <ul class='updown'>
+            {% for msg in site.up %}
+                <li class='up'>{{msg}}</li>
+            {% endfor %}
+            {% for msg in site.down %}
+                <li class='down'>{{msg}}</li>
+            {% endfor %}
+            </ul>
         </div>
         {% endfor %}
     </div>

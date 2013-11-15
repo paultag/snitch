@@ -1,53 +1,79 @@
-(import [snitch.core [db]]
-        datetime)
+(import [snitch.core [db]] datetime)
 
 
-(defclass Exhibit [] [
-  [--init-- (fn [self what]
-              (setattr self "name" (first what))
-              (setattr self "info" (second what)))]
 
-  [down (fn [self] (not (empty? (list (filter (lambda [x] (not (none? x)))
-                                              (getattr self "info"))))))]])
+(defclass
+  Exhibit
+  [dict] [
 
+  [--init-- (fn [self site status]
 
-(defclass Deposition [dict] [
-  [--init-- (fn [self what]
-              (setv result (.find-one db.results {"_id" what}))
-              (if (none? result)
-                (throw (KeyError "Ain't no such thing"))
-                (.refresh self result)))]
+              (assoc self "up" [])
+              (assoc self "down" [])
+              (assoc self "site" site)
+              (assoc self "status" status)
 
-  [create (with-decorator classmethod
-            (fn [cls set-id what]
-              (setv obj (.make-object* Deposition set-id what))
-              (.update db.results {"_id" set-id} obj true)))]
+              (for [(, up msg) status]
+                (.append (if up (get self "up") (get self "down")) msg)))]
 
-
-  [refresh (fn [self what]
-              (for [(, k v) (.items what)]
-                (assoc self k v))
-             (.set-sites* self))]
-
-  [down-sites (fn [self] (filter (lambda [x] (.down x))
-                                 (get self "sites")))]
+  [exhibit->list (fn [self] (get self "status"))]
+  [is-online (fn [self] (empty? (get self "down")))]
+  [is-offline (fn [self] (and (not (empty? (get self "down")))
+                              (empty? (get self "up"))))]
+  [is-mixed (fn [self]
+              ; This is True if we've got some up and some down.
+              (and (not (empty? (get self "down")))
+                   (not (empty? (get self "up")))))]])
 
 
-  [has-outage (fn [self] (any (list-comp (.down x) [x (get self "sites")])))]
-  [is-down (fn [self] (all (list-comp (.down x) [x (get self "sites")])))]
-  ;; xxx: precomp this, this sucks to hit twice.
+(defn create-deposition [set-id result]
+  {"updated_at" (.utcnow datetime.datetime)
+   "_id" set-id
+   "info" (.items result)})
 
-  [set-sites* (fn [self]
-                (assoc self "sites"
-                       (list-comp (Exhibit x) [x (get self "info")])))]
 
-  [make-object* (with-decorator classmethod
-                                (fn [self set-id items]
-                                  {"info" (.items items)
-                                   "updated_at" (.utcnow datetime.datetime)
-                                   "_id" set-id}))]
+(defclass
+  Deposition
+  [dict] [
 
-  [update (fn [self what]
-            (setv result (.make-object* Deposition (get self "_id") what))
-            (.update db.results {"_id" (get self "_id")} result true)
-            (.refresh self result))]])
+  [--init-- (fn [self set-id]
+              (setv obj (.find-one db.results {"_id" set-id}))
+              (if (none? obj)
+                (raise (KeyError (+ "No such entry: " set-id)))
+                (for [(, k v) (.items obj)] (assoc self k v)))
+              (.refresh self))]
+
+  [refresh (fn [self]
+             (assoc self "sites" [])
+
+             (for [(, site status) (get self "info")]
+               (.append (get self "sites") (Exhibit site status)))
+
+             (assoc self "mixed" [])
+             (assoc self "down" [])
+             (assoc self "up" [])
+
+             (for [site (get self "sites")]
+               (.append
+                 (cond
+                   [(.is-online site) (get self "up")]
+                   [(.is-offline site) (get self "down")]
+                   [true (get self "mixed")])  ; don't waste cycles.
+                 site)))]
+
+  [is-online (fn [self] (empty? (get self "down")))]
+
+  [is-offline (fn [self] (and (not (empty? (get self "down")))
+                              (empty? (get self "up"))))]
+  [is-mixed (fn [self]
+              ; This is True if we've got some up and some down.
+              (or (not (empty? (get self "mixed")))
+                (and (not (empty? (get self "down")))
+                     (not (empty? (get self "up"))))))]
+
+  [create (with-decorator classmethod (fn [self set-id result]
+            (.update db.results
+                     {"_id" set-id}
+                     (create-deposition set-id result)
+                     true)
+            (Deposition set-id)))]])
