@@ -14,11 +14,7 @@
         </div>
     {% elif deposition.has_outage() %}
         <div id="header" class="out" >
-            Outage. Currently:
-            {% for site in deposition.down_sites() %}
-                {{site.name}}
-            {% endfor %}
-            are down.
+            Currently we have a partial outage.
         </div>
     {% else %}
         <div id="header" class="up" >
@@ -26,8 +22,25 @@
         </div>
     {% endif %}
 
-    {% for site in deposition.sites %}
-    {{site.name}} {{site.down()}}
-    {% endfor %}
+    <div id='sites'>
+        {% for site in deposition.sites %}
+        <div class='site {% if site.down() %}down{% else %}up{% endif %}'>
+            {% if site.down() %}
+                <span class='status' >↓</span>
+            {% else %}
+                <span class='status' >✓</span>
+            {% endif %}
+            <h2>{{site.name}}</h2>
+
+            {% if site.down() %}
+                <ul>
+                {% for datum in site.info %}
+                    <li>{{datum}}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}
