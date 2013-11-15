@@ -41,7 +41,7 @@
 (defn pingable [host]
   (try
     (do
-      (ping host "-c" 1)
+      (ping host "-c" 4)
       (, true (+ host " responded to ping")))
   (catch [e ErrorReturnCode]
     (, false (+ host " appears unpingable")))))
