@@ -9,9 +9,18 @@
 
 (defmacro rules [set-id &rest my-rules]
   `((fn []
-      (import [snitch.models [Deposition]])
+      (import futures [snitch.models [Deposition]])
 
       (setv results {})  ; capture each result in the closure
-      (for [rue [~@my-rules]] (rue))
 
-      (.create Deposition ~set-id results))))
+      (with [executor (kwapply (.ThreadPoolExecutor futures) {"max_workers" 15})]
+             (for [future
+                   (.as-completed futures
+                     (list-comp (.submit executor rue) [rue [~@my-rules]]))]
+               (print future))
+             (.create Deposition ~set-id results)))))
+
+
+; with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+;     future_to_url = {executor.submit(load_url, url, 60): url for url in URLS}
+;         for future in concurrent.futures.as_completed(future_to_url):

@@ -2,3 +2,4 @@ sh
 hy
 lxml
 requests
+futures
