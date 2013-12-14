@@ -1,0 +1,8 @@
+* Record up/down history
+
+* Backoff pinging (e.g. if a site has been up for the last day, only ping
+  every hour, but if it's down, try every 5 minutes)
+
+* Allow a user to explain the outage with links to things
+
+* Pretty d3 graphs with pretty and pretty.
