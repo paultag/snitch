@@ -13,7 +13,7 @@
   (rule "ftp-master.debian.org" pingable httpable)
   (rule "ftp.upload.debian.org" pingable (has-open-port 21))  ; ftp
   (rule "ssh.upload.debian.org" pingable (has-open-port 22))  ; ssh
-  (rule "release.debian.org" pingable httpable)
+  (rule "release.debian.org" pingable)  ; httpable)  ; https check next
   (rule "snapshot.debian.org" pingable httpable)
   (rule "wiki.debian.org" pingable httpable)
   (rule "lists.debian.org" pingable httpable)
