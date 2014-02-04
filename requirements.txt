@@ -3,3 +3,4 @@ hy
 lxml
 requests
 futures
+pymongo
