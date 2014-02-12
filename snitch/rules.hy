@@ -1,5 +1,5 @@
 (defmacro rule [host &rest conds]
-  `(fn [] (setv ret null)
+  `(fn [] (setv ret nil)
       (print ~host)
       (assoc results ~host [])  ;; do the list thang.
       (for [x [~@conds]]
@@ -12,8 +12,8 @@
       (import futures [snitch.models [Deposition]])
 
       (setv results {})  ; capture each result in the closure
-
-      (with [executor (kwapply (.ThreadPoolExecutor futures) {"max_workers" 15})]
+      (with [[executor (apply futures.ThreadPoolExecutor
+                        [] {"max_workers" 15})]]
              (for [future
                    (.as-completed futures
                      (list-comp (.submit executor rue) [rue [~@my-rules]]))]

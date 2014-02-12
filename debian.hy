@@ -1,5 +1,5 @@
 (require snitch.rules)
-(import [snitch.informants [pingable httpable has-open-port]])
+(import [snitch.informants [pingable httpable has-open-port is-discussing]])
 
 
 (rules "debian"
@@ -22,3 +22,12 @@
   (rule "sources.debian.net" pingable httpable)
   (rule "mentors.debian.net" pingable httpable)
   (rule "debian.org" pingable httpable))
+
+
+(let [[init-flamewars ["systemd" "upstart" "sysvinit" "init"]]
+      [is-flaming (apply is-discussing init-flamewars)]]
+  (rules "debian-lists"
+    (rule "debian-devel" is-flaming)
+    (rule "debian-ctte" is-flaming)
+    (rule "debian-vote" is-flaming)
+    (rule "debian-project" is-flaming)))

@@ -6,7 +6,7 @@
 
 
 (setv app (Flask "__main__"))
-(setv db (getattr (Connection "localhost" 27017) "snitch"))
+(setv db (getattr (Connection "localhost" (int 27017)) "snitch"))
 
 
 (with-decorator (.template-filter app "time")

@@ -12,6 +12,29 @@
       (->> (getattr (.get requests url) "text")
            (.fromstring lxml.html)) "//title") 0)))
 
+
+(defn get-ml-subjects [url]
+(.xpath
+  (->> (getattr (.get requests url) "text")
+       (.fromstring lxml.html)) "//a[contains(@href, 'msg')]/text()"))
+
+
+(defn is-discussing [&rest topics]
+  (fn [dev-list]
+    (let [[subjects (get-ml-subjects
+                      (.format "https://lists.debian.org/{0}/recent" dev-list))]
+          [strings (genexpr (.lower x) [x subjects])]
+          [bad-subjects (set (genexpr
+                          topic
+                          [string strings topic topics]
+                          (is true (in topic string))))]]
+
+    (if (= bad-subjects (set []))
+      (, true "Looks good!")
+      (, false (.format "naughty people talking about {0}"
+                 (.join ", " bad-subjects)))))))
+
+
 (defn has-open-port [port]
   (fn [host]
     (try
