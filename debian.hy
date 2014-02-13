@@ -25,7 +25,8 @@
 
 
 (let [[init-flamewars ["systemd" "upstart" "sysvinit" "init"]]
-      [is-flaming (apply is-discussing init-flamewars)]]
+      [pulse-audio ["pulseaudio"]]
+      [is-flaming (apply is-discussing (+ pulse-audio init-flamewars))]]
   (rules "debian-lists"
     (rule "debian-devel" is-flaming)
     (rule "debian-ctte" is-flaming)
