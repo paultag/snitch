@@ -23,8 +23,9 @@
             "next check is in" (:retry-delay event) "seconds"))
 
     (on :update  ;; store the event in memory
-      (let [[oid (.insert (get db "snitch")
+      (let [[oid (.insert (get db (% "snitch.%s" ~set-id))
               {"checked_at" (:checked-at event)
+               "set"        ~set-id
                "failed"     (:failed event)
                "site"       (:site event)
                "check"      (. (:check event) --name--)
