@@ -3,7 +3,6 @@
 
 
 (rules "debian"
-
   (rule "git.debian.org"
         pingable
         httpable
@@ -22,13 +21,3 @@
   (rule "sources.debian.net" pingable httpable)
   (rule "mentors.debian.net" pingable httpable)
   (rule "debian.org" pingable httpable))
-
-
-(let [[init-flamewars ["systemd" "upstart" "sysvinit" "init"]]
-      [pulse-audio ["pulseaudio"]]
-      [is-flaming (apply is-discussing (+ pulse-audio init-flamewars))]]
-  (rules "debian-lists"
-    (rule "debian-devel" is-flaming)
-    (rule "debian-ctte" is-flaming)
-    (rule "debian-vote" is-flaming)
-    (rule "debian-project" is-flaming)))
