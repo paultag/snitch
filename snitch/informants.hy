@@ -4,8 +4,6 @@
         requests
         socket)
 
-(def results {})
-
 (defn get-html-title [url]
   (.text-content (get
     (.xpath
@@ -20,7 +18,7 @@
 
 
 (defn is-discussing [&rest topics]
-  (fn [dev-list]
+  (defn is-discussing [dev-list]
     (let [[subjects (get-ml-subjects
                       (.format "https://lists.debian.org/{0}/recent" dev-list))]
           [strings (genexpr (.lower x) [x subjects])]
@@ -36,7 +34,7 @@
 
 
 (defn has-open-port [port]
-  (fn [host]
+  (defn has-open-port [host]
     (try
       (do
         (.connect (.socket socket) (, host port))
@@ -45,7 +43,7 @@
       (, false (+ host " has a closed port at port " (str port)))))))
 
 (defn has-in-title [url what]
-  (fn [host]
+  (has-in-title [host]
     (try
       (if (in what (get-html-title url))
         (, true (+ host " contains " what " in the title at " url))

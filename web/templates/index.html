@@ -23,7 +23,7 @@ on remote boxen.
 
 {% for set in sets %}
 <ul>
-    <li><a href="{{ url_for('set_view', setid=set._id) }}" >{{set._id}}</a></li>
+    <li><a href="{{ url_for('set_view', setid=set) }}" >{{set}}</a></li>
 </ul>
 {% endfor %}
 

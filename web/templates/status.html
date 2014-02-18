@@ -4,44 +4,47 @@
 
 {% block body %}
     <h1>Currently viewing the {{set}} sites.</h1>
+    <h2>currently: {{status.status}}</h2>
 
-    <p>This was last checked {{deposition.updated_at|time}}</p>
+   {% if status.state == "down" %}
+       <div id="header" class="down" >
+           It's totally down.
+       </div>
+   {% elif status.state == "out" %}
+       <div id="header" class="out" >
+           Currently we have a partial outage.
+       </div>
+   {% else %}
+       <div id="header" class="up" >
+           It's up!
+       </div>
+   {% endif %}
 
-
-    {% if deposition.is_offline() %}
-        <div id="header" class="down" >
-            It's totally down.
-        </div>
-    {% elif deposition.is_mixed() %}
-        <div id="header" class="out" >
-            Currently we have a partial outage.
-        </div>
-    {% else %}
-        <div id="header" class="up" >
-            It's up!
-        </div>
-    {% endif %}
 
     <div id='sites'>
-        {% for site in deposition.sites %}
-        <div class='site {% if site.is_offline() or site.is_mixed() %}down{% else %}up{% endif %}'>
-            {% if site.is_offline() %}
-                <span class='status' >↓</span>
-            {% else %}
-                <span class='status' >✓</span>
-            {% endif %}
-            <h2>{{site.site}}</h2>
 
-            <ul class='updown'>
-            {% for msg in site.up %}
-                <li class='itemup'>{{msg}}</li>
-            {% endfor %}
-            {% for msg in site.down %}
-                <li class='itemdown'>{{msg}}</li>
-            {% endfor %}
-            </ul>
-        </div>
-        {% endfor %}
+       {% for site in status.sites %}
+       <div class='site {% if site.state == "down" or site.state == "out" %}down{% else %}up{% endif %}'>
+           {% if site.state == "down" %}
+               <span class='status' >↓</span>
+           {% elif site.state == "out" %}
+               <span class='status' >↓.</span>
+           {% else %}
+               <span class='status' >✓</span>
+           {% endif %}
+
+           <h2>{{site.site}}</h2>
+
+           <ul class='updown'>
+           {% for check in site.checks %}
+              {% if check.status == "ok" %}
+                <li class='itemup'>{{check.check.info}}</li>
+              {% else %}
+               <li class='itemdown'>{{check.check.info}}</li>
+              {% endif %}
+           {% endfor %}
+           </ul>
+       </div>
+       {% endfor %}
     </div>
-
 {% endblock %}

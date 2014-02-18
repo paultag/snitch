@@ -3,6 +3,18 @@
 
 (defmacro/g! rule [host &rest my-checks]
   `((fn []
+
+    (.update
+      (get db "sites")
+      {"_id" ~host}
+      {"_id" ~host
+       "set" daemon-set-id
+       "checks" (list-comp
+                  (. x --name--)
+                  [x [~@my-checks]])}
+      true
+      true)
+
     (for [~g!check [~@my-checks]]
       (emit :start-checking {:site ~host :check ~g!check})))))
 
@@ -14,7 +26,8 @@
 
     (trip
       (let [[*min-ping-length* (acid-time 1 minute)]
-            [*max-ping-length* (acid-time 10 minutes)]]
+            [*max-ping-length* (acid-time 10 minutes)]
+            [daemon-set-id ~set-id]]
         (on :startup (print "snitch daemon for" ~set-id "online"))
 
         (on :update  ;; This is debug information

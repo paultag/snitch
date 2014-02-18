@@ -1,7 +1,7 @@
-(import [snitch.models [Deposition]]
-        [local-config [*snitch-landing-sites*]]
+(import [local-config [*snitch-landing-sites*]]
         [pymongo [Connection]]
         [flask [Flask render-template request]]
+        [snitch.utils [get-sets get-set-information]]
         datetime humanize)
 
 
@@ -14,18 +14,15 @@
 
 
 (with-decorator (.route app "/about")
-  (defn about [] (kwapply (render-template "index.html")
-                          {"sets" (.find db.results)})))
+  (defn about [] (apply render-template ["index.html"]
+                        {"sets" (get-sets)})))
+
 
 (with-decorator (.route app "/status/<setid>")
   (defn set-view [setid]
-    (try
-      (kwapply (render-template "status.html")
-               {"set" setid
-                "deposition" (Deposition setid)})
-    (catch [e KeyError]
-      (, (render-template "404.html") 404)))))
-
+    (apply render-template ["status.html"]
+      {"set" setid
+       "status" (get-set-information setid)})))
 
 (defn get-hostname [hostname]
   (if (in ":" hostname) (first (.split hostname ":" 1)) hostname))
