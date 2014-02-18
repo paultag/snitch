@@ -20,4 +20,5 @@
   (rule "codesearch.debian.net" pingable httpable)
   (rule "sources.debian.net" pingable httpable)
   (rule "mentors.debian.net" pingable httpable)
+  (rule "frakfork.debian.net" pingable httpable)
   (rule "debian.org" pingable httpable))

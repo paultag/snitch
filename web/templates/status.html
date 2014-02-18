@@ -6,11 +6,11 @@
     <h1>Currently viewing the {{set}} sites.</h1>
     <h2>currently: {{status.status}}</h2>
 
-   {% if status.state == "down" %}
+   {% if status.status == "down" %}
        <div id="header" class="down" >
            It's totally down.
        </div>
-   {% elif status.state == "out" %}
+   {% elif status.status == "out" %}
        <div id="header" class="out" >
            Currently we have a partial outage.
        </div>
@@ -24,10 +24,10 @@
     <div id='sites'>
 
        {% for site in status.sites %}
-       <div class='site {% if site.state == "down" or site.state == "out" %}down{% else %}up{% endif %}'>
-           {% if site.state == "down" %}
+       <div class='site {% if site.status == "down" or site.status == "out" %}down{% else %}up{% endif %}'>
+           {% if site.status == "down" %}
                <span class='status' >↓</span>
-           {% elif site.state == "out" %}
+           {% elif site.status == "out" %}
                <span class='status' >↓.</span>
            {% else %}
                <span class='status' >✓</span>
