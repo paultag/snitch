@@ -38,9 +38,9 @@
            <ul class='updown'>
            {% for check in site.checks %}
               {% if check.status == "ok" %}
-                <li class='itemup'>{{check.check.info}}</li>
+                <li class='itemup'>{{check.check.info}} (last checked: {{check.check.checked_at|time}})</li>
               {% else %}
-               <li class='itemdown'>{{check.check.info}}</li>
+               <li class='itemdown'>{{check.check.info}} (last checked: {{check.check.checked_at|time}})</li>
               {% endif %}
            {% endfor %}
            </ul>
