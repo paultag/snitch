@@ -1,5 +1,6 @@
 sh
 hy
+acid
 lxml
 requests
-futures
+pymongo
