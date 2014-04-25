@@ -1,3 +1,5 @@
-(import [pymongo [Connection]])
+(import os [pymongo [Connection]])
 
-(setv db (getattr (Connection "localhost" (int 27017)) "snitch"))
+(setv db (getattr (Connection
+  (.get os.environ "SNITCH_MONGO_DB_HOST" "localhost")
+  (int 27017)) "snitch"))
