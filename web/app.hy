@@ -6,7 +6,9 @@
 
 
 (setv app (Flask "__main__"))
-(setv db (getattr (Connection "localhost" (int 27017)) "snitch"))
+(setv db (getattr (Connection
+  (.get os.environ "SNITCH_MONGO_DB_HOST" "localhost")
+  (int 27017)) "snitch"))
 
 
 (with-decorator (.template-filter app "time")
