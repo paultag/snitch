@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
     node-less \
     inkscape \
     pngcrush \
-    git \
     python2.7 python-pip \
     uwsgi uwsgi-plugin-python \
     python-all-dev
