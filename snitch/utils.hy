@@ -19,8 +19,8 @@
                   (.find {"set" setid
                           "site" site
                           "check" check})
-                  (.sort "checked_at" -1)
-                  (.limit 1)
+                  (.sort "checked_at" (int -1))
+                  (.limit (int 1))
                   (get 0))]]
       {"check" info
        "status" (if (get info "failed") "down" "ok")}))
